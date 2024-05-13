@@ -1,11 +1,11 @@
 const User = require("../model/userModel");
 const multerConfig = require("../utils/multer")
 
-exports.createUser = [multerConfig.upload.array("file", 5), async (req, res) => {
+exports.createUser = [multerConfig.upload.array("files", 5), async (req, res) => {
     try {
             const { fname, lname, email, dob, residentalAddress, permanentAddress } = req.body;
             const files = req.files;
-            console.log(files);
+            // console.log(files);
 
             if (!(fname && lname && email && dob)) {
                 return res.status(400).json({ message: "All fields required" });

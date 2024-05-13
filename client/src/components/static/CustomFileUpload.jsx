@@ -4,7 +4,7 @@ import { FileUploadIcon } from "../../assets/index";
 const CustomFileUpload = ({ value, onChange, name, error }) => {
 
     return (
-        <div className='flex flex-col gap-y-2 w-full sm:w-auto'>
+        <div className='flex flex-col gap-y-2 w-full'>
             <label htmlFor={name}>Upload Document<span className='text-red-600'>*</span></label>
             <div className='relative'>
                 <input
@@ -12,7 +12,7 @@ const CustomFileUpload = ({ value, onChange, name, error }) => {
                     id={name}
                     name={name}
                     placeholder="Choose File"
-                    className='p-2 rounded-md z-50 relative w-full border border-black'
+                    className='p-2 rounded-md z-50 relative border border-black w-full'
                     onChange={onChange}
                     value={value}
                 />

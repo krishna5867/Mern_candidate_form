@@ -1,7 +1,23 @@
 import React from 'react'
 import { CustomInputBox } from './static';
 
-const AddressInputs = ({ formData, handleChange, errors }) => {
+const AddressInputs = ({ formData, setFormData, handleChange, errors }) => {
+  
+    const handleCheckBox = (e) => {
+        const isChecked = e.target.checked;
+        if(isChecked){
+            setFormData(prevState => ({
+                ...prevState,
+                permanentAddress: {
+                    ...prevState.residentalAddress 
+                }
+            }));
+        }
+    }
+
+    
+
+
     return (
         <>
             <p className='text-xl font-semibold px-4 mt-4'>Residental Address</p>
@@ -24,7 +40,7 @@ const AddressInputs = ({ formData, handleChange, errors }) => {
                 />
             </div>
             <div className='flex gap-x-2 p-4'>
-                <input type="checkbox" id="add" name="add" className='w-6' />
+                <input type="checkbox" id="add" name="add" className='w-6' onChange={handleCheckBox} />
                 <label htmlFor="add" className='text-lg'>Same as Residental Address</label>
             </div>
             <p className='text-xl font-medium px-4 mt-4'>Permanent Address</p>

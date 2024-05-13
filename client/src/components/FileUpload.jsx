@@ -2,22 +2,37 @@ import React from 'react';
 import { CustomDropDown, CustomFileUpload, CustomInputBox } from './static';
 import { PlusIcon, TrashIcon } from '../assets';
 
-const FileUpload = ({ formData, setFormData, errors }) => {
+const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
     const { documents } = formData;
 
     const handleChange = (index, event) => {
         const { name, value } = event.target;
         const updatedDocuments = [...documents];
+
         if (name === "file") {
             const file = event.target.files[0];
             updatedDocuments[index][name] = file;
         } else {
             updatedDocuments[index][name] = value;
         }
-            setFormData({
+
+        setFormData({
             ...formData,
             documents: updatedDocuments
         });
+
+        setErrors(prevErrors => ({
+            ...prevErrors,
+            documents: prevErrors.documents.map((doc, i) => {
+                if (i === index) {
+                    return {
+                        ...doc,
+                        [name]: ''
+                    };
+                }
+                return doc;
+            })
+        }));
     };
 
     const handleNewFile = () => {
@@ -38,10 +53,10 @@ const FileUpload = ({ formData, setFormData, errors }) => {
 
     return (
         <div>
-            <p className='text-xl font-medium px-4 mt-4'>Upload Documents</p>
+            <p className='text-xl font-medium px-4 pt-10'>Upload Documents</p>
             {documents.map((input, index) => (
-                <div key={index} className="inline-flex py-2 items-center">
-                    <div className='flex flex-wrap gap-x-4 px-4'>
+                <div key={index} className="inline-flex py-2 items-start md:items-center w-full md:w-auto">
+                    <div className='flex md:flex-row flex-col w-full justify-start gap-x-4 px-4 mb-6 md:mb-0'>
                         <CustomInputBox
                             label="File Name"
                             type="text"
@@ -49,8 +64,10 @@ const FileUpload = ({ formData, setFormData, errors }) => {
                             value={input.fileName}
                             required={true}
                             onChange={(event) => handleChange(index, event)}
-                            error={errors?.documents && errors.documents[index]?.fileName}
+                            // error={errors?.documents && errors?.documents[index]}
                         />
+                        <span>
+                        </span>
                         {/* <CustomDropDown /> */}
                         <CustomDropDown
                             value={input.fileType}
@@ -62,12 +79,12 @@ const FileUpload = ({ formData, setFormData, errors }) => {
                                 name="file"
                                 value={formData.documents.file}
                                 onChange={(event) => handleChange(index, event)}
-                                error={errors?.documents && errors.documents[index]?.file}
+                                // error={errors?.documents && errors?.documents[index]}
                             />
                             {index >= 2 && (
-                                <div className='flex justify-center items-center'>
+                                <div className='flex justify-center items-end md:items-center'>
                                     <button
-                                        className='p-2 rounded-md flex items-center justify-center border border-gray-300 bg-gray-200'
+                                        className='p-2 rounded-md flex items-end md:items-center justify-center border border-gray-300 bg-gray-200'
                                         onClick={() => handleDelete(index)}
                                     >
                                         <TrashIcon />
@@ -78,7 +95,7 @@ const FileUpload = ({ formData, setFormData, errors }) => {
                     </div>
                     {index === 0 && documents.length < 5 && (
                         <button
-                            className='p-2 rounded-md bg-black flex items-center justify-center'
+                            className='p-2 mt-8 md:mt-0 mr-2 rounded-md bg-black flex items-center justify-center'
                             onClick={handleNewFile}
                         >
                             <PlusIcon />

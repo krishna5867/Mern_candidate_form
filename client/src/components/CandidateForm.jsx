@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
 import axios from "axios";
-import { FormInputs, AddressInputs, FileUploadInputs, SuccessMsg } from "./index"
+import { FormInputs, AddressInputs, FileUploadInputs } from "./index"
 import { Button, } from './static';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CandidateForm = () => {
-    const [apiResonseMsg, setApiResponseMsg] = useState("");
-    console.log(apiResonseMsg);
-    const [success, setSuccess] = useState(false);
+    // console.log(apiResonseMsg);
 
     const [formData, setFormData] = useState({
         fname: "",
@@ -35,6 +35,7 @@ const CandidateForm = () => {
         ]
     });
     console.log(formData);
+
     const [errors, setErrors] = useState({
         fname: '',
         lname: '',
@@ -122,7 +123,6 @@ const CandidateForm = () => {
                     newErrors.documents[index] = 'All fields are required for document ' + (index + 1);
                     validation = false;
                 } else {
-                    // Clear the error message if the document is valid
                     newErrors.documents[index] = '';
                 }
             });
@@ -133,33 +133,21 @@ const CandidateForm = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value, files, file } = e.target;
-        console.log(files);
-        console.log(file);
-
-        if (files) {
-            const file = files[0]; 
-            const index = parseInt(name.split('file')[1]) - 1; 
-
-            // Update the file in the documents array
-            setFormData(prevState => {
-                const newDocuments = [...prevState.documents];
-                newDocuments[index] = {
-                    ...newDocuments[index],
-                    file: file
-                };
-                return {
-                    ...prevState,
-                    documents: newDocuments
-                };
-            });
-        } else if (name.includes('residentalAddress') || name.includes('permanentAddress')) {
+        const { name, value } = e.target;
+        if (name.includes('residentalAddress') || name.includes('permanentAddress')) {
             const [addressType, addressField] = name.split('.');
             setFormData(prevState => ({
                 ...prevState,
                 [addressType]: {
                     ...prevState[addressType],
                     [addressField]: value
+                }
+            }));
+            setErrors(prevErrors => ({
+                ...prevErrors,
+                [addressType]: {
+                    ...prevErrors[addressType],
+                    [addressField]: ''
                 }
             }));
         } else {
@@ -174,58 +162,50 @@ const CandidateForm = () => {
             }));
         }
     };
-
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        if (!validateForm()) {
-            return;
-        }
-
-        try {
-            const { fname, lname, email, dob, residentalAddress, permanentAddress, documents } = formData;
-            const userData = {
-                fname,
-                lname,
-                email,
-                dob,
-                residentalAddress,
-                permanentAddress,
-                documents
+    
+        const handleSubmit = async (e) => {
+            e.preventDefault();
+    
+            if (!validateForm()) {
+                return;
+            }
+    
+            try {
+                const { fname, lname, email, dob, residentalAddress, permanentAddress, documents } = formData;
+                const userData = {
+                    fname,
+                    lname,
+                    email,
+                    dob,
+                    residentalAddress,
+                    permanentAddress,
+                    documents
             };
-            const res = await axios.post("http://localhost:4000/api/v1/form", userData,
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
+            const res = await axios.post("http://localhost:4000/api/v1/form", userData
+                // {
+                //     headers: {
+                //         'Content-Type': 'multipart/form-data'
+                //     }
+                // }
             );
             const data = res.data;
-            setApiResponseMsg(res.data.message);
-            setSuccess(true)
-            setTimeout(() => {
-                setSuccess(false);
-            }, 1500);
+            toast.success(res.data.messsage);
             console.log("Response:", data);
         } catch (error) {
+            toast.error(error.messsage);
             console.error("Error:", error);
-            setApiResponseMsg(error.message);
-
         }
     }
     return (
         <div className='max-w-5xl mx-auto'>
-            {/* {success && (
-            <SuccessMsg message={apiResonseMsg} />
-        )} */}
             <h1 className="text-black font-bold text-2xl text-center py-10">MERN STACK MACHINE TEST</h1>
             <form onSubmit={handleSubmit}>
                 <FormInputs formData={formData} handleChange={handleChange} errors={errors} />
-                <AddressInputs formData={formData} handleChange={handleChange} errors={errors} />
-                <FileUploadInputs formData={formData} setFormData={setFormData} errors={errors} />
+                <AddressInputs formData={formData} setFormData={setFormData} handleChange={handleChange} errors={errors} />
+                <FileUploadInputs formData={formData} setFormData={setFormData} errors={errors} setErrors={setErrors}/>
                 <Button />
             </form>
+            <ToastContainer/>
         </div>
     )
 }
