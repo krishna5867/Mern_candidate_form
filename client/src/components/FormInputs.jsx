@@ -36,6 +36,7 @@ const Form = ({ formData, handleChange, errors }) => {
                     label="Date of Birth"
                     type="date"
                     name="dob"
+                    placeholder="Enter DOB"
                     value={formData.dob}
                     onChange={handleChange}
                     error={errors.dob}

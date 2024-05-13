@@ -84,6 +84,7 @@ const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
                             {index >= 2 && (
                                 <div className='flex justify-center items-end md:items-center'>
                                     <button
+                                    type="button"
                                         className='p-2 rounded-md flex items-end md:items-center justify-center border border-gray-300 bg-gray-200'
                                         onClick={() => handleDelete(index)}
                                     >
@@ -97,6 +98,7 @@ const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
                         <button
                             className='p-2 mt-8 md:mt-0 mr-2 rounded-md bg-black flex items-center justify-center'
                             onClick={handleNewFile}
+                            type="button"
                         >
                             <PlusIcon />
                         </button>
