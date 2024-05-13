@@ -51,11 +51,6 @@ exports.createUser = [
         residentalAddress,
         permanentAddress,
         // documents,
-        // documents: [{
-        //     fileName,
-        //     fileType,
-        //     file: filePath,
-        // }]
       });
 
       const savedUser = await user.save();

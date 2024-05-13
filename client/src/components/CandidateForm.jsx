@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { FormInputs, AddressInputs, FileUploadInputs } from "./index";
 import { Button } from "./static";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const CandidateForm = () => {
-  // console.log(apiResonseMsg);
 
   const [formData, setFormData] = useState({
     fname: "",
@@ -34,7 +32,7 @@ const CandidateForm = () => {
       },
     ],
   });
-  console.log(formData);
+  // console.log({ formData });
 
   const [errors, setErrors] = useState({
     fname: "",
@@ -62,7 +60,6 @@ const CandidateForm = () => {
       },
     ],
   });
-  // console.log(errors);
 
   const validateForm = () => {
     let validation = true;
@@ -118,20 +115,20 @@ const CandidateForm = () => {
       validation = false;
     }
 
-    if (formData.documents.length < 2) {
-      newErrors.documents = "At least two documents are required";
-      validation = false;
-    } else {
-      formData.documents.forEach((document, index) => {
-        if (!document.fileName.trim() || !document.fileType || !document.file) {
-          newErrors.documents[index] =
-            "All fields are required for document " + (index + 1);
-          validation = false;
-        } else {
-          newErrors.documents[index] = "";
-        }
-      });
-    }
+    // if (formData.documents.length < 2) {
+    //   newErrors.documents = "At least two documents are required";
+    //   validation = false;
+    // } else {
+    //   formData.documents.forEach((document, index) => {
+    //     if (!document.fileName.trim() || !document.fileType || !document.file) {
+    //       newErrors.documents[index] =
+    //         "All fields are required for document " + (index + 1);
+    //       validation = false;
+    //     } else {
+    //       newErrors.documents[index] = "";
+    //     }
+    //   });
+    // }
 
     setErrors(newErrors);
     return validation;
@@ -186,21 +183,44 @@ const CandidateForm = () => {
       _data.files = _data.files[0];
 
       const userData = axios.toFormData(_data);
+      console.log({ userData });
 
       const res = await axios.post(
         "http://localhost:4000/api/v1/form",
         _data
-        // {
-        //     headers: {
-        //         'Content-Type': 'multipart/form-data'
-        //     }
-        // }
       );
       const data = res.data;
-      toast.success(res.data.messsage);
-      console.log("Response:", data);
+      toast.success(data.message);
+
+      // clear formData
+      setFormData({
+        fname: "",
+        lname: "",
+        email: "",
+        dob: "",
+        residentalAddress: {
+          street1: "",
+          street2: "",
+        },
+        permanentAddress: {
+          street1: "",
+          street2: "",
+        },
+        documents: [
+          {
+            fileName: "",
+            fileType: "",
+            file: null,
+          },
+          {
+            fileName: "",
+            fileType: "",
+            file: null,
+          },
+        ],
+      });
     } catch (error) {
-      toast.error(error.messsage);
+      toast.error(error.message);
       console.error("Error:", error);
     }
   };
@@ -229,7 +249,6 @@ const CandidateForm = () => {
         />
         <Button />
       </form>
-      <ToastContainer />
     </div>
   );
 };
