@@ -22,14 +22,10 @@ const userSehema = new mongoose.Schema({
     type: {
       street1: {
         type: String,
-        // unique: true,
-        //   required: true,
         default: null,
       },
       street2: {
         type: String,
-        // unique: true,
-        //   required: true,
         default: null,
       },
     },
@@ -38,12 +34,10 @@ const userSehema = new mongoose.Schema({
   permanentAddress: {
     street1: {
       type: String,
-      // unique: true,
       default: null,
     },
     street2: {
       type: String,
-      // unique: true,
       default: null,
     },
   },
@@ -58,7 +52,7 @@ const userSehema = new mongoose.Schema({
         enum: ["image", "pdf"],
         required: true,
       },
-      file: {
+      documentFile: {
         type: String,
         required: true,
       },

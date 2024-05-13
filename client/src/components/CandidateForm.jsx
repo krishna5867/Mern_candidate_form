@@ -32,7 +32,6 @@ const CandidateForm = () => {
       },
     ],
   });
-  // console.log({ formData });
 
   const [errors, setErrors] = useState({
     fname: "",
@@ -66,8 +65,7 @@ const CandidateForm = () => {
     const newErrors = { ...errors };
 
     // eslint-disable-next-line no-useless-escape
-    const emailRegex =
-      /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/;
+    const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/;
 
     if (!formData.fname.trim()) {
       newErrors.fname = "First Name is required";
@@ -168,6 +166,19 @@ const CandidateForm = () => {
     }
   };
 
+  // Function to flatten nested objects
+const flattenObject = (obj, prefix = "") => {
+  return Object.keys(obj).reduce((acc, key) => {
+    const propName = prefix ? `${prefix}.${key}` : key;
+    if (typeof obj[key] === "object" && obj[key] !== null) {
+      Object.assign(acc, flattenObject(obj[key], propName));
+    } else {
+      acc[propName] = obj[key];
+    }
+    return acc;
+  }, {});
+};
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -176,19 +187,49 @@ const CandidateForm = () => {
     }
 
     try {
-      const _data = { ...formData };
+      const formDataToSend = { ...formData };
 
-      _data.files = formData.documents.map((document) => document.file);
+      // Flatten nested objects in formDataToSend
+      const flattenedData = flattenObject(formDataToSend);
 
-      _data.files = _data.files[0];
+      const formDataWithFiles = new FormData();
 
-      const userData = axios.toFormData(_data);
-      console.log({ userData });
+      // Append flattened form data fields to formDataWithFiles
+      for (const key in flattenedData) {
+        formDataWithFiles.append(key, flattenedData[key]);
+      }
 
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/form",
-        _data
-      );
+      // Append files
+      formData.documents.forEach((document, index) => {
+        formDataWithFiles.append(`file${index}`, document.file); // Append only the 'file' property
+      });
+      
+     
+
+      // const formDataToSend = { ...formData };
+
+      // formDataToSend.documents.forEach(doc => delete doc.file);
+
+      // const formDataWithFiles = new FormData();
+
+      // // Append other form data fields
+      // for (const key in formDataToSend) {
+      //   if (typeof formDataToSend[key] === 'object') {
+      //     for (const subKey in formDataToSend[key]) {
+      //       formDataWithFiles.append(`${key}.${subKey}`, formDataToSend[key][subKey]);
+      //     }
+      //   } else {
+      //     formDataWithFiles.append(key, formDataToSend[key]);
+      //   }
+      // }
+      // console.log(formDataToSend);
+
+      // // Append files
+      // formData.documents.forEach((document, index) => {
+      //   formDataWithFiles.append(`file${index}`, document.file);
+      // });
+
+      const res = await axios.post("http://localhost:4000/api/v1/form", formDataWithFiles);
       const data = res.data;
       toast.success(data.message);
 
@@ -220,8 +261,8 @@ const CandidateForm = () => {
         ],
       });
     } catch (error) {
-      toast.error(error.message);
       console.error("Error:", error);
+      toast.error(error.message);
     }
   };
   return (

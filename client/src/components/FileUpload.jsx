@@ -2,7 +2,7 @@ import React from 'react';
 import { CustomDropDown, CustomFileUpload, CustomInputBox } from './static';
 import { PlusIcon, TrashIcon } from '../assets';
 
-const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
+const FileUpload = ({ formData, setFormData, errors, setErrors}) => {
     const { documents } = formData;
 
     const handleChange = (index, event) => {
@@ -72,6 +72,7 @@ const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
                         <CustomDropDown
                             value={input.fileType}
                             onChange={(event) => handleChange(index, event)}
+
                         />
                         <div className='flex gap-x-2'>
                             <CustomFileUpload

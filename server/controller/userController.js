@@ -2,47 +2,45 @@ const User = require("../model/userModel");
 const multerConfig = require("../utils/multer");
 
 exports.createUser = [
-  // multerConfig.upload.single("files"),
-  async (req, res) => {
+  multerConfig.upload, async (req, res) => {
     try {
-      const { fname, lname, email, dob, residentalAddress, permanentAddress } =
-        req.body;
-      const files = req.files;
-      // console.log(files);
+      const { fname, lname, email, dob, residentalAddress, permanentAddress } = req.body;
+      const files = req.file.filename;
+      console.log({ files });
 
-      if (!(fname && lname && email && dob)) {
+      if (!(fname && lname && email && dob && residentalAddress)) {
         return res.status(400).json({ message: "All fields required" });
       }
 
-      // if (!files || files.length < 2 || files.length > 5) {
-      //   return res
-      //     .status(400)
-      //     .json({ message: "You must upload between 2 and 5 files" });
-      // }
+      if (!files || files.length < 2 || files.length > 5) {
+        return res
+          .status(400)
+          .json({ message: "You must upload between 2 and 5 files" });
+      }
 
       const documents = [];
-      // for (const fileData of files) {
-      //   const {
-      //     filename: fileName,
-      //     mimetype: fileType,
-      //     path: filePath,
-      //   } = fileData.file;
+      for (const fileData of files) {
+        const {
+          filename: fileName,
+          mimetype: fileType,
+          path: filePath,
+        } = fileData.file;
 
-      //   if (
-      //     !["image/jpeg", "image/png", "application/pdf"].includes(fileType)
-      //   ) {
-      //     return res.status(400).json({
-      //       message:
-      //         "Filetype must be either 'image/jpeg', 'image/png', or 'application/pdf'",
-      //     });
-      //   }
+        if (
+          !["image/jpeg", "image/png", "application/pdf"].includes(fileType)
+        ) {
+          return res.status(400).json({
+            message:
+              "Filetype must be either 'image/jpeg', 'image/png', or 'application/pdf'",
+          });
+        }
 
-      //   documents.push({
-      //     fileName,
-      //     fileType,
-      //     file: filePath,
-      //   });
-      // }
+        documents.push({
+          fileName,
+          fileType,
+          documentFile: filePath,
+        });
+      }
       const user = new User({
         fname,
         lname,
@@ -50,7 +48,7 @@ exports.createUser = [
         dob,
         residentalAddress,
         permanentAddress,
-        // documents,
+        documents,
       });
 
       const savedUser = await user.save();
@@ -66,7 +64,7 @@ exports.createUser = [
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await User.find({});
     if (users.length > 0) {
       res.status(200).json({
         message: "Users retrieved successfully",
