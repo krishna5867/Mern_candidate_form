@@ -8,7 +8,6 @@ exports.createUser = [
     try {
       const { fname, lname, email, dob, residentalStreet1, residentalStreet2, permanentStreet1, permanentStreet2 } = req.body;
       const files = req.files;
-      console.log(req.body);
 
       if (!files || files.length < 2 || files.length > 5) {
         return res.status(400).json({ message: "Number of files should be between 2 and 5." });

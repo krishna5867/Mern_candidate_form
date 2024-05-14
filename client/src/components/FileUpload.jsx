@@ -2,7 +2,7 @@ import React from 'react';
 import { CustomDropDown, CustomFileUpload, CustomInputBox } from './static';
 import { PlusIcon, TrashIcon } from '../assets';
 
-const FileUpload = ({ formData, setFormData, errors, setErrors}) => {
+const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
     const { documents } = formData;
 
     const handleChange = (index, event) => {
@@ -64,27 +64,27 @@ const FileUpload = ({ formData, setFormData, errors, setErrors}) => {
                             value={input.fileName}
                             required={true}
                             onChange={(event) => handleChange(index, event)}
-                            // error={errors?.documents && errors?.documents[index]}
-                        />
+                            error={errors.documents && errors.documents[index] && errors.documents[index].fileName !== undefined ? errors.documents[index].fileName : "File Name Required"}
+                            />
                         <span>
                         </span>
                         {/* <CustomDropDown /> */}
                         <CustomDropDown
                             value={input.fileType}
                             onChange={(event) => handleChange(index, event)}
-
+                            error={errors.documents && errors.documents[index] && errors.documents[index].fileType !== undefined ? errors.documents[index].fileType : "Select File Type"}
                         />
                         <div className='flex gap-x-2'>
                             <CustomFileUpload
                                 type="file"
                                 value={formData.documents.file}
                                 onChange={(event) => handleChange(index, event)}
-                                // error={errors?.documents && errors?.documents[index]}
+                                error={errors.documents && errors.documents[index] && errors.documents[index].file !== undefined ? errors.documents[index].file : "Select File"}
                             />
                             {index >= 2 && (
                                 <div className='flex justify-center items-end md:items-center'>
                                     <button
-                                    type="button"
+                                        type="button"
                                         className='p-2 rounded-md flex items-end md:items-center justify-center border border-gray-300 bg-gray-200'
                                         onClick={() => handleDelete(index)}
                                     >

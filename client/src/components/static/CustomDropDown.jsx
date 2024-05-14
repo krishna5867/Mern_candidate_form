@@ -1,6 +1,6 @@
 import React from "react";
 
-const CustomDropDown = ({ value, onChange }) => {
+const CustomDropDown = ({ value, onChange, error }) => {
 
     return (
         <div className='flex flex-col gap-y-2 w-full sm:w-auto'>
@@ -16,6 +16,9 @@ const CustomDropDown = ({ value, onChange }) => {
                 <option value="pdf">PDF</option>
             </select>
             <span>(Image, pdf)</span>
+            {error && (
+                <p className="text-red-600">{error}</p>
+            )}
         </div>
     );
 };

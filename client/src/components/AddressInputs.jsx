@@ -2,15 +2,20 @@ import React from 'react'
 import { CustomInputBox } from './static';
 
 const AddressInputs = ({ formData, setFormData, handleChange, errors }) => {
-  
+
     const handleCheckBox = (e) => {
         const isChecked = e.target.checked;
-        if(isChecked){
+        if (isChecked) {
             setFormData(prevState => ({
                 ...prevState,
-                permanentAddress: {
-                    ...prevState.residentalAddress 
-                }
+                permanentStreet1: formData.residentalStreet1,
+                permanentStreet2: formData.residentalStreet2
+            }));
+        }else{
+            setFormData(prevState => ({
+                ...prevState,
+                permanentStreet1: '',
+                permanentStreet2: ''
             }));
         }
     }
