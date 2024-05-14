@@ -2,7 +2,7 @@ import React from 'react';
 import { CustomDropDown, CustomFileUpload, CustomInputBox } from './static';
 import { PlusIcon, TrashIcon } from '../assets';
 
-const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
+const FileUpload = ({ formData, setFormData, errors, setErrors}) => {
     const { documents } = formData;
 
     const handleChange = (index, event) => {
@@ -39,7 +39,7 @@ const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
         if (Array.isArray(documents) && documents.length < 5) {
             setFormData({
                 ...formData,
-                documents: [...documents, { fileName: '', fileType: '', file: '' }]
+                documents: [...documents, { fileName: '', fileType: '', file: null }]
             });
         }
     };
@@ -72,11 +72,11 @@ const FileUpload = ({ formData, setFormData, errors, setErrors }) => {
                         <CustomDropDown
                             value={input.fileType}
                             onChange={(event) => handleChange(index, event)}
+
                         />
                         <div className='flex gap-x-2'>
                             <CustomFileUpload
                                 type="file"
-                                name="file"
                                 value={formData.documents.file}
                                 onChange={(event) => handleChange(index, event)}
                                 // error={errors?.documents && errors?.documents[index]}

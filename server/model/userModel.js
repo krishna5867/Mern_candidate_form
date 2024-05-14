@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSehema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   fname: {
     type: String,
     required: true,
@@ -18,34 +18,21 @@ const userSehema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  residentalAddress: {
-    type: {
-      street1: {
-        type: String,
-        // unique: true,
-        //   required: true,
-        default: null,
-      },
-      street2: {
-        type: String,
-        // unique: true,
-        //   required: true,
-        default: null,
-      },
-    },
-    required: true,
+  residentalStreet1: {
+    type: String,
+    required: true
   },
-  permanentAddress: {
-    street1: {
-      type: String,
-      // unique: true,
-      default: null,
-    },
-    street2: {
-      type: String,
-      // unique: true,
-      default: null,
-    },
+  residentalStreet2: {
+    type: String,
+    required: true
+  },
+  permanentStreet1: {
+    type: String,
+    default: null
+  },
+  permanentStreet2: {
+    type: String,
+    default: null
   },
   documents: [
     {
@@ -58,7 +45,7 @@ const userSehema = new mongoose.Schema({
         enum: ["image", "pdf"],
         required: true,
       },
-      file: {
+      documentFile: {
         type: String,
         required: true,
       },
@@ -66,4 +53,4 @@ const userSehema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("User", userSehema);
+module.exports = mongoose.model("User", userSchema);

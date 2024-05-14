@@ -11,14 +11,10 @@ const CandidateForm = () => {
     lname: "",
     email: "",
     dob: "",
-    residentalAddress: {
-      street1: "",
-      street2: "",
-    },
-    permanentAddress: {
-      street1: "",
-      street2: "",
-    },
+    residentalStreet1: "",
+    residentalStreet2: "",
+    permanentStreet1: "",
+    permanentStreet2: "",
     documents: [
       {
         fileName: "",
@@ -32,21 +28,16 @@ const CandidateForm = () => {
       },
     ],
   });
-  // console.log({ formData });
 
   const [errors, setErrors] = useState({
     fname: "",
     lname: "",
     email: "",
     dob: "",
-    residentalAddress: {
-      street1: "",
-      street2: "",
-    },
-    permanentAddress: {
-      street1: "",
-      street2: "",
-    },
+    residentalStreet1: " ",
+    residentalStreet2: " ",
+    permanentStreet1: " ",
+    permanentStreet2: " ",
     documents: [
       {
         fileName: "",
@@ -66,8 +57,7 @@ const CandidateForm = () => {
     const newErrors = { ...errors };
 
     // eslint-disable-next-line no-useless-escape
-    const emailRegex =
-      /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/;
+    const emailRegex = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,})$/;
 
     if (!formData.fname.trim()) {
       newErrors.fname = "First Name is required";
@@ -106,12 +96,12 @@ const CandidateForm = () => {
       }
     }
 
-    if (!formData.residentalAddress.street1.trim()) {
-      newErrors.residentalAddress.street1 = "Residential address is required";
+    if (!formData.residentalStreet1.trim()) {
+      newErrors.residentalStreet1 = "Residential address is required";
       validation = false;
     }
-    if (!formData.residentalAddress.street2.trim()) {
-      newErrors.residentalAddress.street2 = "Residential address is required";
+    if (!formData.residentalStreet2.trim()) {
+      newErrors.residentalStreet2 = "Residential address is required";
       validation = false;
     }
 
@@ -134,38 +124,32 @@ const CandidateForm = () => {
     return validation;
   };
 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    if (
-      name.includes("residentalAddress") ||
-      name.includes("permanentAddress")
-    ) {
-      const [addressType, addressField] = name.split(".");
-      setFormData((prevState) => ({
-        ...prevState,
-        [addressType]: {
-          ...prevState[addressType],
-          [addressField]: value,
-        },
-      }));
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [addressType]: {
-          ...prevErrors[addressType],
-          [addressField]: "",
-        },
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
 
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: "",
-      }));
-    }
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
+  }
+
+
+  // Function to flatten nested objects
+  const flattenObject = (obj, prefix = "") => {
+    return Object.keys(obj).reduce((acc, key) => {
+      const propName = prefix ? `${prefix}.${key}` : key;
+      if (typeof obj[key] === "object" && obj[key] !== null) {
+        Object.assign(acc, flattenObject(obj[key], propName));
+      } else {
+        acc[propName] = obj[key];
+      }
+      return acc;
+    }, {});
   };
 
   const handleSubmit = async (e) => {
@@ -176,19 +160,22 @@ const CandidateForm = () => {
     }
 
     try {
-      const _data = { ...formData };
+      const formDataToSend = { ...formData };
 
-      _data.files = formData.documents.map((document) => document.file);
+      const flattenedData = flattenObject(formDataToSend);
 
-      _data.files = _data.files[0];
+      const formDataWithFiles = new FormData();
 
-      const userData = axios.toFormData(_data);
-      console.log({ userData });
+      for (const key in flattenedData) {
+        formDataWithFiles.append(key, flattenedData[key]);
+      }
 
-      const res = await axios.post(
-        "http://localhost:4000/api/v1/form",
-        _data
-      );
+      formData.documents.forEach((document, index) => {
+        formDataWithFiles.append(`file`, document.file);
+
+      });
+
+      const res = await axios.post("http://localhost:4000/api/v1/form", formDataWithFiles);
       const data = res.data;
       toast.success(data.message);
 
@@ -198,32 +185,34 @@ const CandidateForm = () => {
         lname: "",
         email: "",
         dob: "",
-        residentalAddress: {
-          street1: "",
-          street2: "",
-        },
-        permanentAddress: {
-          street1: "",
-          street2: "",
-        },
+        residentalStreet1: "",
+        residentalStreet2: "",
+        permanentStreet1: "",
+        permanentStreet2: "",
         documents: [
           {
             fileName: "",
             fileType: "",
-            file: null,
+            file: "",
           },
           {
             fileName: "",
             fileType: "",
-            file: null,
+            file: "",
           },
         ],
       });
+
     } catch (error) {
-      toast.error(error.message);
       console.error("Error:", error);
+      if (error.res && error.res.data && error.res.data.message) {
+        toast.error(error.res.data.message);
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
     }
   };
+
   return (
     <div className="max-w-5xl mx-auto">
       <h1 className="text-black font-bold text-2xl text-center py-10">
