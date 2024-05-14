@@ -105,20 +105,20 @@ const CandidateForm = () => {
       validation = false;
     }
 
-    // if (formData.documents.length < 2) {
-    //   newErrors.documents = "At least two documents are required";
-    //   validation = false;
-    // } else {
-    //   formData.documents.forEach((document, index) => {
-    //     if (!document.fileName.trim() || !document.fileType || !document.file) {
-    //       newErrors.documents[index] =
-    //         "All fields are required for document " + (index + 1);
-    //       validation = false;
-    //     } else {
-    //       newErrors.documents[index] = "";
-    //     }
-    //   });
-    // }
+    if (formData.documents.length < 2) {
+      newErrors.documents = "At least two documents are required";
+      validation = false;
+    } else {
+      formData.documents.forEach((document, index) => {
+        if (!document.fileName.trim() || !document.fileType || !document.file) {
+          newErrors.documents[index] =
+            "All fields are required for document " + (index + 1);
+          validation = false;
+        } else {
+          newErrors.documents[index] = "";
+        }
+      });
+    }
 
     setErrors(newErrors);
     return validation;
