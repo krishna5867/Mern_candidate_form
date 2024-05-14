@@ -15,7 +15,6 @@ const storage = multer.diskStorage({
   filename: function (req, file, cb) {
     const filename = `document-${Date.now()}.${file.originalname.split('.').pop()}`
     cb(null, filename);
-    // cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
 
@@ -36,14 +35,14 @@ const fileFilter = function (req, file, cb) {
 };
 
 // middleware for validating
-const validateFileCount = function (req, res, next) {
-  if (!req.files || req.files.length < 2 || req.files.length > 5) {
-    return res
-      .status(400)
-      .json({ message: "Number of files should be between 2 and 5." });
-  }
-  next();
-};
+// const validateFileCount = function (req, res, next) {
+//   if (!req.files || req.files.length < 2 || req.files.length > 5) {
+//     return res
+//       .status(400)
+//       .json({ message: "Number of files should be between 2 and 5." });
+//   }
+//   next();
+// };
 
 const upload = multer({ 
   storage: storage, 
@@ -52,5 +51,5 @@ const upload = multer({
 
 module.exports = {
   upload: upload,
-  validateFileCount: validateFileCount,
+  // validateFileCount: validateFileCount,
 };

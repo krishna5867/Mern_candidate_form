@@ -15,9 +15,6 @@ const AddressInputs = ({ formData, setFormData, handleChange, errors }) => {
         }
     }
 
-    
-
-
     return (
         <>
             <p className='text-xl font-semibold px-4 mt-4'>Residental Address</p>
@@ -25,18 +22,18 @@ const AddressInputs = ({ formData, setFormData, handleChange, errors }) => {
                 <CustomInputBox
                     label="Street 1"
                     type="text"
-                    name="residentalAddress.street1"
-                    value={formData.residentalAddress.street1}
+                    name="residentalStreet1"
+                    value={formData.residentalStreet1}
                     onChange={handleChange}
-                    error={errors.residentalAddress.street1}
+                    error={errors.residentalStreet1}
                 />
                 <CustomInputBox
                     label="Street 2"
                     type="text"
-                    name="residentalAddress.street2"
-                    value={formData.residentalAddress.street2}
+                    name="residentalStreet2"
+                    value={formData.residentalStreet2}
                     onChange={handleChange}
-                    error={errors.residentalAddress.street2}
+                    error={errors.residentalStreet2}
                 />
             </div>
             <div className='flex gap-x-2 p-4'>
@@ -49,16 +46,16 @@ const AddressInputs = ({ formData, setFormData, handleChange, errors }) => {
                     label="Street 1"
                     type="text"
                     required={false}
-                    name="permanentAddress.street1"
-                    value={formData.permanentAddress.street1}
+                    name="permanentStreet1"
+                    value={formData.permanentStreet1}
                     onChange={handleChange}
                 />
                 <CustomInputBox
                     label="Street 2"
                     type="text"
                     required={false}
-                    name="permanentAddress.street2"
-                    value={formData.permanentAddress.street2}
+                    name="permanentStreet2"
+                    value={formData.permanentStreet2}
                     onChange={handleChange}
                 />
             </div>

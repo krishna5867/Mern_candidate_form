@@ -10,7 +10,7 @@ const CustomFileUpload = ({ value, onChange, name, error }) => {
                 <input
                     type="file"
                     id={name}
-                    name={name}
+                    name="file"
                     placeholder="Choose File"
                     className='p-2 rounded-md z-50 relative border border-black w-full'
                     onChange={onChange}

@@ -18,31 +18,21 @@ const userSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  residentalAddress: {
-    type: {
-      street1: {
-        type: String,
-        default: null,
-      },
-      street2: {
-        type: String,
-        default: null,
-      },
-    },
-    required: true,
+  residentalStreet1: {
+    type: String,
+    required: true
   },
-  permanentAddress: {
-    type: {
-      street1: {
-        type: String,
-        default: null,
-      },
-      street2: {
-        type: String,
-        default: null,
-      },
-    },
-    default: {},
+  residentalStreet2: {
+    type: String,
+    required: true
+  },
+  permanentStreet1: {
+    type: String,
+    default: null
+  },
+  permanentStreet2: {
+    type: String,
+    default: null
   },
   documents: [
     {
