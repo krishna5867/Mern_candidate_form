@@ -2,29 +2,24 @@ const User = require("../model/userModel");
 const multerConfig = require("../utils/multer");
 
 exports.createUser = [
-  multerConfig.upload, async (req, res) => {
+  // multerConfig.validateFileCount, 
+  multerConfig.upload,
+  async (req, res) => {
     try {
       const { fname, lname, email, dob, residentalAddress, permanentAddress } = req.body;
-      const files = req.file.filename;
-      console.log({ files });
+      const files = req.files;
 
-      if (!(fname && lname && email && dob && residentalAddress)) {
-        return res.status(400).json({ message: "All fields required" });
-      }
-
-      if (!files || files.length < 2 || files.length > 5) {
-        return res
-          .status(400)
-          .json({ message: "You must upload between 2 and 5 files" });
+      if (!fname || !lname || !email || !dob || !residentalAddress) {
+        return res.status(400).json({ message: "All fields are required" });
       }
 
       const documents = [];
       for (const fileData of files) {
         const {
-          filename: fileName,
+          originalname: fileName,
           mimetype: fileType,
           path: filePath,
-        } = fileData.file;
+        } = fileData;
 
         if (
           !["image/jpeg", "image/png", "application/pdf"].includes(fileType)

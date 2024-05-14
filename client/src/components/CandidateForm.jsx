@@ -189,45 +189,18 @@ const flattenObject = (obj, prefix = "") => {
     try {
       const formDataToSend = { ...formData };
 
-      // Flatten nested objects in formDataToSend
       const flattenedData = flattenObject(formDataToSend);
 
       const formDataWithFiles = new FormData();
 
-      // Append flattened form data fields to formDataWithFiles
       for (const key in flattenedData) {
         formDataWithFiles.append(key, flattenedData[key]);
       }
 
-      // Append files
       formData.documents.forEach((document, index) => {
-        formDataWithFiles.append(`file${index}`, document.file); // Append only the 'file' property
+        formDataWithFiles.append(`file${index}`, document.file); 
       });
-      
      
-
-      // const formDataToSend = { ...formData };
-
-      // formDataToSend.documents.forEach(doc => delete doc.file);
-
-      // const formDataWithFiles = new FormData();
-
-      // // Append other form data fields
-      // for (const key in formDataToSend) {
-      //   if (typeof formDataToSend[key] === 'object') {
-      //     for (const subKey in formDataToSend[key]) {
-      //       formDataWithFiles.append(`${key}.${subKey}`, formDataToSend[key][subKey]);
-      //     }
-      //   } else {
-      //     formDataWithFiles.append(key, formDataToSend[key]);
-      //   }
-      // }
-      // console.log(formDataToSend);
-
-      // // Append files
-      // formData.documents.forEach((document, index) => {
-      //   formDataWithFiles.append(`file${index}`, document.file);
-      // });
 
       const res = await axios.post("http://localhost:4000/api/v1/form", formDataWithFiles);
       const data = res.data;

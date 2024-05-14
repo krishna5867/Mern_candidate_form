@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const userSehema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   fname: {
     type: String,
     required: true,
@@ -32,14 +32,17 @@ const userSehema = new mongoose.Schema({
     required: true,
   },
   permanentAddress: {
-    street1: {
-      type: String,
-      default: null,
+    type: {
+      street1: {
+        type: String,
+        default: null,
+      },
+      street2: {
+        type: String,
+        default: null,
+      },
     },
-    street2: {
-      type: String,
-      default: null,
-    },
+    default: {},
   },
   documents: [
     {
@@ -60,4 +63,4 @@ const userSehema = new mongoose.Schema({
   ],
 });
 
-module.exports = mongoose.model("User", userSehema);
+module.exports = mongoose.model("User", userSchema);

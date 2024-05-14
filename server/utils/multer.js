@@ -1,10 +1,16 @@
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 
+// Create uploads directory if it doesn't exist
+const uploadDir = "uploads/";
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 // Multer storage configuration
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "uploads/");
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     const filename = `document-${Date.now()}.${file.originalname.split('.').pop()}`
@@ -39,10 +45,12 @@ const validateFileCount = function (req, res, next) {
   next();
 };
 
+const upload = multer({ 
+  storage: storage, 
+  fileFilter: fileFilter,
+}).array("file", 5);
+
 module.exports = {
-  upload: multer({ 
-    storage: storage, 
-    fileFilter: fileFilter,
-    validateFileCount: validateFileCount,
-  }).array("file", 5)
+  upload: upload,
+  validateFileCount: validateFileCount,
 };
