@@ -243,3 +243,4 @@ const CandidateForm = () => {
 };
 
 export default CandidateForm;
+
